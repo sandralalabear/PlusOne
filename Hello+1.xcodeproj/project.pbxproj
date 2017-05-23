@@ -29,6 +29,8 @@
 		1B491E701ED2CF440049DD4B /* slider-default7-trackBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B491E551ED2CF440049DD4B /* slider-default7-trackBackground@2x.png */; };
 		1B491E711ED2CF440049DD4B /* slider-default7-trackCrossedOver.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B491E561ED2CF440049DD4B /* slider-default7-trackCrossedOver.png */; };
 		1B491E721ED2CF440049DD4B /* slider-default7-trackCrossedOver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B491E571ED2CF440049DD4B /* slider-default7-trackCrossedOver@2x.png */; };
+		1B491E801ED44E380049DD4B /* PaymentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491E7F1ED44E380049DD4B /* PaymentTableViewCell.m */; };
+		1B491E831ED44E620049DD4B /* ShippingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491E821ED44E620049DD4B /* ShippingTableViewCell.m */; };
 		1B9029AA1EA7404B002F11CE /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9029A91EA7404B002F11CE /* LoginViewController.m */; };
 		1B990E291ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B990E281ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.m */; };
 		1BC751E21E9E2CB700796C41 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC751E11E9E2CB700796C41 /* main.m */; };
@@ -74,6 +76,10 @@
 		1B491E551ED2CF440049DD4B /* slider-default7-trackBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slider-default7-trackBackground@2x.png"; sourceTree = "<group>"; };
 		1B491E561ED2CF440049DD4B /* slider-default7-trackCrossedOver.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slider-default7-trackCrossedOver.png"; sourceTree = "<group>"; };
 		1B491E571ED2CF440049DD4B /* slider-default7-trackCrossedOver@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slider-default7-trackCrossedOver@2x.png"; sourceTree = "<group>"; };
+		1B491E7E1ED44E380049DD4B /* PaymentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentTableViewCell.h; sourceTree = "<group>"; };
+		1B491E7F1ED44E380049DD4B /* PaymentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentTableViewCell.m; sourceTree = "<group>"; };
+		1B491E811ED44E620049DD4B /* ShippingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShippingTableViewCell.h; sourceTree = "<group>"; };
+		1B491E821ED44E620049DD4B /* ShippingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShippingTableViewCell.m; sourceTree = "<group>"; };
 		1B9029A81EA7404B002F11CE /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		1B9029A91EA7404B002F11CE /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		1B990E271ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverPhotoCollectionViewCell.h; sourceTree = "<group>"; };
@@ -212,6 +218,10 @@
 				1BF404B51ECEF8C80081D0DA /* DatePickerTableViewCell.m */,
 				1BF404DF1ED0CA200081D0DA /* MinAndMaxSliderTableViewCell.h */,
 				1BF404E01ED0CA200081D0DA /* MinAndMaxSliderTableViewCell.m */,
+				1B491E7E1ED44E380049DD4B /* PaymentTableViewCell.h */,
+				1B491E7F1ED44E380049DD4B /* PaymentTableViewCell.m */,
+				1B491E811ED44E620049DD4B /* ShippingTableViewCell.h */,
+				1B491E821ED44E620049DD4B /* ShippingTableViewCell.m */,
 			);
 			name = "Tableview custom cells";
 			sourceTree = "<group>";
@@ -408,8 +418,10 @@
 				1B2FF0E91EC9800500695862 /* CoverPhotoTableViewCell.m in Sources */,
 				1BF404E81ED184970081D0DA /* NMRangeSlider.h in Sources */,
 				1B322BFA1EA3BB5400BD60F6 /* ProfileTableViewController.m in Sources */,
+				1B491E831ED44E620049DD4B /* ShippingTableViewCell.m in Sources */,
 				1BF404B61ECEF8C80081D0DA /* DatePickerTableViewCell.m in Sources */,
 				1B2FF0E01EC4207400695862 /* CreateADealTableViewController.m in Sources */,
+				1B491E801ED44E380049DD4B /* PaymentTableViewCell.m in Sources */,
 				1B9029AA1EA7404B002F11CE /* LoginViewController.m in Sources */,
 				1B990E291ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.m in Sources */,
 				1BF404B31ECEB26A0081D0DA /* DealNameAndDescriptionTableViewCell.m in Sources */,

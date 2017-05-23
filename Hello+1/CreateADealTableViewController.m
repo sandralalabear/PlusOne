@@ -20,16 +20,14 @@
 static NSString *DatePickerTableViewCellIdentifier = @"DatePickerTableViewCell";
 static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTableViewCell";
 
-@interface CreateADealTableViewController () <UIImagePickerControllerDelegate,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextViewDelegate,UITextFieldDelegate>
+@interface CreateADealTableViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextViewDelegate,UITextFieldDelegate>
     
     @property (nonatomic,strong) NSMutableArray *titleArray;
     @property (nonatomic,strong) NSMutableArray *createADealArray;
     @property (nonatomic,strong) NSArray *dealPhotos;
     @property (nonatomic,strong) NSArray *dealNameandDescription;
     @property (nonatomic,strong) NSArray *condition;
-    
-    @property (nonatomic,strong) NSArray *shipping;
-    @property (nonatomic,strong) NSArray *payment;
+    @property (nonatomic,strong) NSArray *paymentAndShipping;
     
     @property (nonatomic,strong) UIImage *modifiedImage;
     
@@ -54,17 +52,15 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(savePressed)];
     
     // Initialize arrays in create a deal tableView array
-    _titleArray = [[NSMutableArray alloc] initWithObjects:@"Deal photos",@"Deal name and Description",@"Condition",@"Shipping",@"Payment", nil];
+    _titleArray = [[NSMutableArray alloc] initWithObjects:@"Deal photos",@"Deal name and Description",@"Condition",@"Payment and Shipping", nil];
     _dealPhotos = [[NSArray alloc] initWithObjects:@"coverPhoto", nil];
     _dealNameandDescription = [[NSArray alloc] initWithObjects:@"dealName",@"dealDescription", nil];
     _condition = [[NSArray alloc] initWithObjects:@"Ending date",@"Set min quantity and max quantity", nil];
     //_dealDescription = [[NSArray alloc] initWithObjects:@"dealDescription", nil];
-    _shipping = [[NSArray alloc] initWithObjects:@"shipping", nil];
-    _payment = [[NSArray alloc] initWithObjects:@"payment", nil];
+    _paymentAndShipping = [[NSArray alloc] initWithObjects:@"shipping",@"payment", nil];
     
     _createADealArray = [[NSMutableArray alloc] initWithObjects:_dealPhotos,_dealNameandDescription,_condition, nil];
-    //_createADealArray = [[NSMutableArray alloc] initWithObjects:_dealPhotos,_dealName,_condition,_dealDescription,_shipping,_payment, nil];
-    
+   
     
     // Set ending date picker
     [self configureEndingDatePicker];

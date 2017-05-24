@@ -14,11 +14,16 @@
 #import "DatePickerTableViewCell.h"
 #import "MinAndMaxSliderTableViewCell.h"
 #import "NMRangeSlider.h"
+#import "PriceAndQuantityRangeTableViewCell.h"
+#import "PriceAndQuantityData.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
 
 static NSString *DatePickerTableViewCellIdentifier = @"DatePickerTableViewCell";
 static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTableViewCell";
+static NSString *priceAndQuantityCellIdentifier = @"PriceAndQuantityCell";
+static NSString *addRangeCellIdentifier = @"AddRangeCell";
+
 
 @interface CreateADealTableViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextViewDelegate,UITextFieldDelegate>
     
@@ -27,6 +32,8 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
     @property (nonatomic,strong) NSArray *dealPhotos;
     @property (nonatomic,strong) NSArray *dealNameandDescription;
     @property (nonatomic,strong) NSArray *condition;
+
+    @property (nonatomic,strong) NSMutableArray *priceAndQuantityArray;
     @property (nonatomic,strong) NSArray *paymentAndShipping;
     
     @property (nonatomic,strong) UIImage *modifiedImage;
@@ -40,6 +47,8 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
     @property (nonatomic,strong) UIDatePicker *datePicker;
     @property (nonatomic,strong) UIToolbar *datePickerToolbar;
     
+    @property (nonatomic,strong) NSMutableArray *priceAndQuantityList;
+    
     @end
 
 @implementation CreateADealTableViewController
@@ -52,15 +61,12 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(savePressed)];
     
     // Initialize arrays in create a deal tableView array
-    _titleArray = [[NSMutableArray alloc] initWithObjects:@"Deal photos",@"Deal name and Description",@"Condition",@"Payment and Shipping", nil];
+    _titleArray = [[NSMutableArray alloc] initWithObjects:@"Deal photos",@"Deal name and Description",@"Condition",@"Price and Quantity range", nil];
     _dealPhotos = [[NSArray alloc] initWithObjects:@"coverPhoto", nil];
     _dealNameandDescription = [[NSArray alloc] initWithObjects:@"dealName",@"dealDescription", nil];
     _condition = [[NSArray alloc] initWithObjects:@"Ending date",@"Set min quantity and max quantity", nil];
-    //_dealDescription = [[NSArray alloc] initWithObjects:@"dealDescription", nil];
-    _paymentAndShipping = [[NSArray alloc] initWithObjects:@"shipping",@"payment", nil];
-    
-    _createADealArray = [[NSMutableArray alloc] initWithObjects:_dealPhotos,_dealNameandDescription,_condition, nil];
-   
+    _priceAndQuantityArray = [[NSMutableArray alloc] initWithObjects:@"price",@"quantity", nil];
+    _createADealArray = [[NSMutableArray alloc] initWithObjects:_dealPhotos,_dealNameandDescription,_condition,_priceAndQuantityArray, nil];
     
     // Set ending date picker
     [self configureEndingDatePicker];
@@ -70,8 +76,27 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
     [self addDoneToolBarToKeyboard:_dealDescriptionTextView];
     [self createEndingDateFormatter];
     [self loadDealData];
+    _priceAndQuantityList = [self loadPriceAndQuantityData];
     
 }
+
+
+- (NSMutableArray*) loadPriceAndQuantityData {
+    PriceAndQuantityData *tmpdata = [[PriceAndQuantityData alloc] init];
+    tmpdata.price = @500;
+    tmpdata.quantity = @20;
+    PriceAndQuantityData *tmpdata2 = [[PriceAndQuantityData alloc] init];
+    tmpdata2.price = @400;
+    tmpdata2.quantity = @40;
+    PriceAndQuantityData *tmpdata3 = [[PriceAndQuantityData alloc] init];
+    tmpdata3.price = @300;
+    tmpdata3.quantity = @60;
+//    NSMutableArray *fakedata = @[tmpdata,tmpdata2,tmpdata3];
+    
+    NSMutableArray *fakedata = [[NSMutableArray alloc] initWithObjects:tmpdata,tmpdata2,tmpdata3, nil];
+    return fakedata;
+}
+    
     
 - (void)viewDidUnload {
     [super viewDidUnload];
@@ -94,6 +119,20 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
+
+    
+#pragma mark - Price and quantity range methods
+
+- (IBAction)addARangeButton:(id)sender {
+    [self.tableView beginUpdates];
+    PriceAndQuantityData *toAdd = [[PriceAndQuantityData alloc] init];
+    [_priceAndQuantityList addObject:toAdd];
+    NSIndexPath *newPath = [NSIndexPath indexPathForRow:_priceAndQuantityList.count-1 inSection:3];
+    [self.tableView insertRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+}
+
+    
     
 #pragma mark - Set Textfield keyboard dissmiss
 -(void)doneButtonClickedDismissKeyboard {
@@ -213,7 +252,11 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
 }
     
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[_createADealArray objectAtIndex:section] count];
+    if (section == 3) {
+        return _priceAndQuantityList.count + 1;
+    } else {
+        return [[_createADealArray objectAtIndex:section] count];
+    }
 }
     
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -298,7 +341,17 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
         }
         case 3:
         {
-            
+            if(indexPath.row < _priceAndQuantityList.count) {
+                NSLog(@"%ld", (long)indexPath.row);
+                PriceAndQuantityRangeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:priceAndQuantityCellIdentifier forIndexPath:indexPath];
+                PriceAndQuantityData *priceAndQuantitydata = _priceAndQuantityList[indexPath.row];
+                cell.minQuantityLabel.text = [NSString stringWithFormat:@"%@", priceAndQuantitydata.price];
+                cell.minQuantityPrice.text = [NSString stringWithFormat:@"%@",priceAndQuantitydata.quantity];
+                cellToReturn = cell;
+            } else {
+                PriceAndQuantityRangeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:addRangeCellIdentifier forIndexPath:indexPath];
+                cellToReturn = cell;
+            }
             break;
         }
         case 4:
@@ -311,6 +364,16 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
         break;
     }
     return cellToReturn;
+}
+    
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }
 }
     
     
@@ -329,12 +392,12 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
         case 3:
         return [_titleArray objectAtIndex:section];
         break;
-        case 4:
-        return [_titleArray objectAtIndex:section];
-        break;
-        case 5:
-        return [_titleArray objectAtIndex:section];
-        break;
+//        case 4:
+//        return [_titleArray objectAtIndex:section];
+//        break;
+//        case 5:
+//        return [_titleArray objectAtIndex:section];
+//        break;
         default:
         return nil;
         break;
@@ -494,17 +557,8 @@ static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTable
      }
      */
     
-    /*
-     // Override to support editing the table view.
-     - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-     if (editingStyle == UITableViewCellEditingStyleDelete) {
-     // Delete the row from the data source
-     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
+    
+    
     
     /*
      // Override to support rearranging the table view.

@@ -1,14 +1,14 @@
 //
-//  ShippingTableViewCell.m
+//  PriceAndQuantityRangeTableViewCell.m
 //  Hello+1
 //
 //  Created by Sandra Wei on 2017/5/23.
 //  Copyright © 2017年 Appbear. All rights reserved.
 //
 
-#import "ShippingTableViewCell.h"
+#import "PriceAndQuantityRangeTableViewCell.h"
 
-@implementation ShippingTableViewCell
+@implementation PriceAndQuantityRangeTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

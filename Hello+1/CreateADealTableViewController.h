@@ -7,6 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CoverPhotoTableViewCell.h"
+#import "CoverPhotoCollectionViewCell.h"
+#import "DealNameAndDescriptionTableViewCell.h"
+#import "DatePickerTableViewCell.h"
+#import "MinAndMaxSliderTableViewCell.h"
+#import "PriceAndQuantityRangeTableViewCell.h"
+#import "PriceAndQuantityData.h"
+#import "PaymentTableViewCell.h"
+#import "ShippingTableViewCell.h"
+#import "NMRangeSlider.h"
+#import "XLFormViewController.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+
+
+
 
 @interface CreateADealTableViewController : UITableViewController <UICollectionViewDelegate,UICollectionViewDataSource>
 

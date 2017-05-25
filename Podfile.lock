@@ -25,11 +25,13 @@ PODS:
   - FBSDKLoginKit (4.21.0):
     - FBSDKCoreKit
   - TWPhotoPicker (1.0.0)
+  - XLForm (3.3.0)
 
 DEPENDENCIES:
   - AFNetworking
   - FBSDKLoginKit
   - TWPhotoPicker (~> 1.0.0)
+  - XLForm (~> 3.0)
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -37,7 +39,8 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 8a372ab194b5c7c26355c1920ef52dbeb44bc222
   FBSDKLoginKit: a1a5f4b4ac445823a020fbeeaf5f03714a67ff9c
   TWPhotoPicker: 5e9bcd6097e8602e8243d1bdd54a5cf1afbedcf2
+  XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
 
-PODFILE CHECKSUM: 5df4628bc0d28f52c8487bd3e278c19becdacfe2
+PODFILE CHECKSUM: e97f09abf63d204e56dae3cd4832ec0f5a4c22df
 
 COCOAPODS: 1.2.0

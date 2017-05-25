@@ -7,31 +7,31 @@
 //
 
 #import "CreateADealTableViewController.h"
-#import "CoverPhotoTableViewCell.h"
-#import "CoverPhotoCollectionViewCell.h"
-#import "DealDescriptionTableViewCell.h"
-#import "DealNameAndDescriptionTableViewCell.h"
-#import "DatePickerTableViewCell.h"
-#import "MinAndMaxSliderTableViewCell.h"
-#import "NMRangeSlider.h"
-#import "PriceAndQuantityRangeTableViewCell.h"
-#import "PriceAndQuantityData.h"
-#import <MobileCoreServices/MobileCoreServices.h>
 
-
+static NSString *CoverPhotoCellIdentifier = @"CoverPhotoCell";
+static NSString *DealNameAndDescriptionTableViewCellIdentifier = @"DealNameAndDescriptionTableViewCell";
+static NSString *DealDescriptionTableViewCellIdentifier = @"DealDescriptionTableViewCell";
 static NSString *DatePickerTableViewCellIdentifier = @"DatePickerTableViewCell";
 static NSString *MinAndMaxSliderTableViewCellIdentifier = @"MinAndMaxSliderTableViewCell";
 static NSString *priceAndQuantityCellIdentifier = @"PriceAndQuantityCell";
 static NSString *addRangeCellIdentifier = @"AddRangeCell";
-
+static NSString *PaymentTableViewCellIndentifier = @"PaymentTableViewCell";
+static NSString *PaymentMethodsTableViewCellIdentifier = @"PaymentMethodsTableViewCell";
+static NSString *ShippingTableViewCellIdentifier = @"ShippingTableViewCell";
+static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTableViewCell";
 
 @interface CreateADealTableViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextViewDelegate,UITextFieldDelegate>
-    
+    {
+        NSMutableArray *priceAndQuantityList;
+    }
     @property (nonatomic,strong) NSMutableArray *titleArray;
     @property (nonatomic,strong) NSMutableArray *createADealArray;
     @property (nonatomic,strong) NSArray *dealPhotos;
     @property (nonatomic,strong) NSArray *dealNameandDescription;
     @property (nonatomic,strong) NSArray *condition;
+    @property (nonatomic,strong) NSArray *paymentArray;
+    @property (nonatomic,strong) NSArray *shippingArray;
+
 
     @property (nonatomic,strong) NSMutableArray *priceAndQuantityArray;
     @property (nonatomic,strong) NSArray *paymentAndShipping;
@@ -47,7 +47,7 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
     @property (nonatomic,strong) UIDatePicker *datePicker;
     @property (nonatomic,strong) UIToolbar *datePickerToolbar;
     
-    @property (nonatomic,strong) NSMutableArray *priceAndQuantityList;
+   
     
     @end
 
@@ -61,12 +61,21 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(savePressed)];
     
     // Initialize arrays in create a deal tableView array
-    _titleArray = [[NSMutableArray alloc] initWithObjects:@"Deal photos",@"Deal name and Description",@"Condition",@"Price and Quantity range", nil];
+    _titleArray = [[NSMutableArray alloc] initWithObjects:@"Deal photos",@"Deal name and Description",@"Condition",@"Price and Quantity range",@"Payment methods",@"Shipping methods", nil];
     _dealPhotos = [[NSArray alloc] initWithObjects:@"coverPhoto", nil];
     _dealNameandDescription = [[NSArray alloc] initWithObjects:@"dealName",@"dealDescription", nil];
     _condition = [[NSArray alloc] initWithObjects:@"Ending date",@"Set min quantity and max quantity", nil];
     _priceAndQuantityArray = [[NSMutableArray alloc] initWithObjects:@"price",@"quantity", nil];
-    _createADealArray = [[NSMutableArray alloc] initWithObjects:_dealPhotos,_dealNameandDescription,_condition,_priceAndQuantityArray, nil];
+    //_paymentArray = [[NSMutableArray alloc] initWithObjects:@"Paypal",@"Money transfer",@"Credit card", @"Payment upon pickup", nil];
+    // Expandable section
+    _paymentArray = [[NSMutableArray alloc] initWithObjects:@"title",@"Paypal",@"Money transfer",@"Credit card", @"Payment upon pickup", nil];
+    _shippingArray = [[NSMutableArray alloc] initWithObjects:@"title",@"Express",@"Payment upon pickup",@"Ezship",nil];
+    _createADealArray = [[NSMutableArray alloc] initWithObjects:_dealPhotos,_dealNameandDescription,_condition,_priceAndQuantityArray,_paymentArray,_shippingArray, nil];
+    
+
+    
+    
+  
     
     // Set ending date picker
     [self configureEndingDatePicker];
@@ -76,11 +85,16 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
     [self addDoneToolBarToKeyboard:_dealDescriptionTextView];
     [self createEndingDateFormatter];
     [self loadDealData];
-    _priceAndQuantityList = [self loadPriceAndQuantityData];
+    priceAndQuantityList = [self loadPriceAndQuantityData];
+    [self adddoneButtontoPriceRangetextfiledKeyboard];
     
 }
-
-
+// when deal saved then pass all datas to next page
+- (void)savePressed {
+    //...
+}
+    
+// 假資料
 - (NSMutableArray*) loadPriceAndQuantityData {
     PriceAndQuantityData *tmpdata = [[PriceAndQuantityData alloc] init];
     tmpdata.price = @500;
@@ -91,29 +105,13 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
     PriceAndQuantityData *tmpdata3 = [[PriceAndQuantityData alloc] init];
     tmpdata3.price = @300;
     tmpdata3.quantity = @60;
-//    NSMutableArray *fakedata = @[tmpdata,tmpdata2,tmpdata3];
-    
     NSMutableArray *fakedata = [[NSMutableArray alloc] initWithObjects:tmpdata,tmpdata2,tmpdata3, nil];
     return fakedata;
-}
-    
-    
-- (void)viewDidUnload {
-    [super viewDidUnload];
 }
     
 - (void) viewDidAppear: (BOOL)animated {
     [super viewWillAppear:animated];
     [self updateSliderLabels];
-}
-    
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-    
-    // when deal saved then pass all datas to next page
--(void)savePressed {
-    //...
 }
     
 - (void)didReceiveMemoryWarning {
@@ -126,16 +124,28 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
 - (IBAction)addARangeButton:(id)sender {
     [self.tableView beginUpdates];
     PriceAndQuantityData *toAdd = [[PriceAndQuantityData alloc] init];
-    [_priceAndQuantityList addObject:toAdd];
-    NSIndexPath *newPath = [NSIndexPath indexPathForRow:_priceAndQuantityList.count-1 inSection:3];
+    // default number in textfield
+    toAdd.price = @0;
+    toAdd.quantity = @0;
+    NSLog(@"aaaa%@,%@,%@",toAdd.price,toAdd.quantity,toAdd);
+    [priceAndQuantityList addObject:toAdd];
+    NSIndexPath *newPath = [NSIndexPath indexPathForRow:priceAndQuantityList.count-1 inSection:3];
     [self.tableView insertRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
 }
 
+- (void)adddoneButtontoPriceRangetextfiledKeyboard {
+    _keyboardDoneToolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
+    UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)];
     
+    [_keyboardDoneToolBar sizeToFit];
+    [_keyboardDoneToolBar setItems:[[NSArray alloc] initWithObjects: extraSpace, doneButton, nil]];
+}
+
     
-#pragma mark - Set Textfield keyboard dissmiss
--(void)doneButtonClickedDismissKeyboard {
+#pragma mark - Set TextViewkeyboard dissmiss
+- (void)doneButtonClickedDismissKeyboard {
     [self.view endEditing:YES];
 }
     
@@ -154,7 +164,7 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
     }
 }
     
--(void)addDoneToolBarToKeyboard:(UITextView *)textView {
+- (void)addDoneToolBarToKeyboard:(UITextView *)textView {
     _keyboardDoneToolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
     UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)];
@@ -165,12 +175,10 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
     
 #pragma mark - Date picker
     
--(void) configureEndingDatePicker {
+- (void) configureEndingDatePicker {
     // Initialise UIDatePicker
     _datePicker = [[UIDatePicker alloc] init];
     _datePicker.datePickerMode = UIDatePickerModeDate;
-    //[_datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged]; // method to respond to changes in the picker value
-    
     // Setup UIToolbar for UIDatePicker
     _datePickerToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
     UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -179,13 +187,14 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
 }
     
 - (void)loadDealData {
-    // ...
     self.endingDate = [NSDate date];
 }
+    
 - (void)createEndingDateFormatter {
     self.endingDateFormatter = [[NSDateFormatter alloc] init];
     [self.endingDateFormatter setDateFormat:@"yyyy/MM/dd"];
 }
+    
 - (void)dismissPicker {
     _endingDate = _datePicker.date;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:2];
@@ -195,71 +204,78 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
 }
     
 #pragma mark - Textfield Keyboard dismiss funciton with return type done
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self.view endEditing:YES];
     return YES;
 }
     
     
-#pragma mark - Label Slider
-    - (void) configureLabelSlider: (NMRangeSlider *)labelSlider {
-        
-        labelSlider.minimumValue = 0;
-        labelSlider.maximumValue = 500;
-        
-        labelSlider.lowerValue = 0;
-        labelSlider.upperValue = 500;
-        
-        labelSlider.minimumRange = 1;
-    }
+#pragma mark - Slider of min and max quantity
+- (void) configureLabelSlider: (NMRangeSlider *)labelSlider {
+    labelSlider.minimumValue = 0;
+    labelSlider.maximumValue = 500;
+    labelSlider.lowerValue = 0;
+    labelSlider.upperValue = 500;
+    labelSlider.minimumRange = 1;
+}
     
-    - (void) updateSliderLabels {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:2];
-        MinAndMaxSliderTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        // Get the center point of the slider handles and use this to arrange other subviews
-        CGPoint lowerCenter;
-        lowerCenter.x = (cell.labelSlider.lowerCenter.x + cell.labelSlider.frame.origin.x);
-        lowerCenter.y = (cell.labelSlider.center.y - 30.0f);
-        cell.lowerLabel.center = lowerCenter;
-        cell.lowerLabel.text = [NSString stringWithFormat:@"%d", (int) cell.labelSlider.lowerValue];
-        
-        CGPoint upperCenter;
-        upperCenter.x = (cell.labelSlider.upperCenter.x + cell.labelSlider.frame.origin.x);
-        upperCenter.y = (cell.labelSlider.center.y - 30.0f);
-        cell.upperLabel.center = upperCenter;
-        cell.upperLabel.text = [NSString stringWithFormat:@"%d", (int)cell.labelSlider.upperValue];
-        NSLog(@"i'm heredsfsdf , %f", cell.labelSlider.center.y);
-        NSLog(@"%f", cell.labelSlider.frame.origin.x);
-        NSLog(@"i'm here , %@",[NSString stringWithFormat:@"%d", (int) cell.labelSlider.lowerValue]);
-    }
+- (void) updateSliderLabels {
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:2];
+    MinAndMaxSliderTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    // Get the center point of the slider handles and use this to arrange other subviews
+    CGPoint lowerCenter;
+    lowerCenter.x = (cell.labelSlider.lowerCenter.x + cell.labelSlider.frame.origin.x);
+    lowerCenter.y = (cell.labelSlider.center.y - 30.0f);
+    cell.lowerLabel.center = lowerCenter;
+    cell.lowerLabel.text = [NSString stringWithFormat:@"%d", (int) cell.labelSlider.lowerValue];
     
-    // Handle control value changed events just like a normal slider
+    CGPoint upperCenter;
+    upperCenter.x = (cell.labelSlider.upperCenter.x + cell.labelSlider.frame.origin.x);
+    upperCenter.y = (cell.labelSlider.center.y - 30.0f);
+    cell.upperLabel.center = upperCenter;
+    cell.upperLabel.text = [NSString stringWithFormat:@"%d", (int)cell.labelSlider.upperValue];
+    NSLog(@"i'm heredsfsdf , %f", cell.labelSlider.center.y);
+    NSLog(@"%f", cell.labelSlider.frame.origin.x);
+    NSLog(@"i'm here , %@",[NSString stringWithFormat:@"%d", (int) cell.labelSlider.lowerValue]);
+}
+    
+// Handle control value changed events just like a normal slider
 - (IBAction)labelSliderChanged:(NMRangeSlider*)sender {
     [self updateSliderLabels];
 }
+   
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+    
     
 #pragma mark - Table view data source
     
-    // Set Section title color
--(void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+// Set Section title color
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
     // Text Color
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setTextColor:[UIColor colorWithRed:80.0/255.0 green:227.0/255.0 blue:194.0/255.0 alpha:1.0]];
 }
     
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
     return [_createADealArray count];
 }
     
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    NSMutableIndexSet * iset = [NSMutableIndexSet indexSet];
+    [iset addIndex:section];
     if (section == 3) {
-        return _priceAndQuantityList.count + 1;
+        return priceAndQuantityList.count + 1;
     } else {
         return [[_createADealArray objectAtIndex:section] count];
     }
 }
     
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     id cellToReturn=nil;
     
     // Configure the cells
@@ -267,15 +283,10 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
         case 0:
         {
             // Set cover photo here
-            static NSString *cellIdentifier = @"CoverPhotoCell";
-            CoverPhotoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            if(cell == nil) {
-                cell = [[CoverPhotoTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            }
+            CoverPhotoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CoverPhotoCellIdentifier forIndexPath:indexPath];
             cell.clview.delegate = self;
             cell.clview.dataSource = self;
             cell.clview.allowsMultipleSelection = YES;
-            
             cellToReturn = cell;
             break;
         }
@@ -283,34 +294,23 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
         {
             if (indexPath.row == 0) {
                 // Set Deal name here
-                static NSString *cellIdentifier = @"DealNameAndDescriptionTableViewCell";
-                DealNameAndDescriptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-                if(cell == nil) {
-                    cell = [[DealNameAndDescriptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-                }
+                DealNameAndDescriptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:DealNameAndDescriptionTableViewCellIdentifier forIndexPath:indexPath];
                 cell.dealNameTextField.delegate = self;
                 cell.dealNameTextField.returnKeyType = UIReturnKeyDone;
                 cell.dealNameTextField.text = _dealNameText;
                 cellToReturn = cell;
             } else {
                 // Set Deal description in textView
-                static NSString *cellIdentifier = @"DealDescriptionTableViewCell";
-                DealDescriptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-                if(cell == nil) {
-                    cell = [[DealDescriptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-                }
+                DealNameAndDescriptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:DealDescriptionTableViewCellIdentifier];
                 cell.dealDescriptionTextView.delegate = self;
                 cell.dealDescriptionTextView.inputAccessoryView = _keyboardDoneToolBar;
                 cell.dealDescriptionTextView.text = @"Input your deal description here...";
                 cell.dealDescriptionTextView.textColor = [UIColor colorWithRed:199.0/255.0 green:199.0/255.0 blue:205.0/255.0 alpha:0.8];
-
                 _dealDescriptionTextView = cell.dealDescriptionTextView;
-                
                 cellToReturn = cell;
             }
             break;
         }
-        
         case 2:
         {
             if (indexPath.row == 0) {
@@ -318,35 +318,30 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
                 DatePickerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:DatePickerTableViewCellIdentifier];
                 if (cell == nil) {
                     cell = [[DatePickerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:DatePickerTableViewCellIdentifier];
+                cellToReturn = cell;
                 }
-                
                 // Set UITextfield's inputView as UIDatePicker
                 cell.endingDateTextField.inputView = _datePicker;
                 // Set UITextfield's inputAccessoryView as UIToolbar
                 cell.endingDateTextField.inputAccessoryView = _datePickerToolbar;
                 cell.endingDateTextField.text = [_endingDateFormatter stringFromDate:_endingDate];
                 cellToReturn = cell;
-                
             } else if (indexPath.row == 1) {
                 // Set min and max slider
                 MinAndMaxSliderTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MinAndMaxSliderTableViewCellIdentifier forIndexPath:indexPath];
                 [self configureLabelSlider:cell.labelSlider];
                 cellToReturn = cell;
-            } else {
-                //...
-                
             }
-            
             break;
         }
         case 3:
         {
-            if(indexPath.row < _priceAndQuantityList.count) {
+            if(indexPath.row < priceAndQuantityList.count) {
                 NSLog(@"%ld", (long)indexPath.row);
                 PriceAndQuantityRangeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:priceAndQuantityCellIdentifier forIndexPath:indexPath];
-                PriceAndQuantityData *priceAndQuantitydata = _priceAndQuantityList[indexPath.row];
-                cell.minQuantityLabel.text = [NSString stringWithFormat:@"%@", priceAndQuantitydata.price];
-                cell.minQuantityPrice.text = [NSString stringWithFormat:@"%@",priceAndQuantitydata.quantity];
+                PriceAndQuantityData *priceAndQuantitydata = priceAndQuantityList[indexPath.row];
+                cell.priceTextField.text = [NSString stringWithFormat:@"%@", priceAndQuantitydata.price];
+                cell.quantityTextField.text = [NSString stringWithFormat:@"%@",priceAndQuantitydata.quantity];
                 cellToReturn = cell;
             } else {
                 PriceAndQuantityRangeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:addRangeCellIdentifier forIndexPath:indexPath];
@@ -355,27 +350,59 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
             break;
         }
         case 4:
-        // shipping picker
+        // Payment expandable methods
+        if (indexPath.row == 0) {
+            PaymentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentTableViewCellIndentifier];
+            cell.textLabel.text = @"Choose your payment methods for buyer";
+            cell.detailTextLabel.text = @"";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cellToReturn = cell;
+        } else {
+            PaymentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentMethodsTableViewCellIdentifier forIndexPath:indexPath];
+            cell.paymentMethodTextField.text = [_paymentArray objectAtIndex:indexPath.row];
+            cellToReturn = cell;
+        }
         break;
         case 5:
-        // payment picker
+        // payment
+        if (indexPath.row == 0) {
+            ShippingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ShippingTableViewCellIdentifier];
+            cell.textLabel.text = @"Choose your shipping methods for buyer";
+            cell.detailTextLabel.text = @"";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cellToReturn = cell;
+        } else {
+            ShippingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ShippingMethodsTableViewCellIdentifier forIndexPath:indexPath];
+            cell.shippingMethodTextField.text = [_shippingArray objectAtIndex:indexPath.row];
+            cellToReturn = cell;
+        }
         break;
         default:
         break;
     }
     return cellToReturn;
 }
-    
-// Override to support editing the table view.
+    // Delete
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // If row is deleted, remove it from the list.
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+        
+        [priceAndQuantityList removeObjectAtIndex:indexPath.row];
+        // 存回至 NSUserDefault
+        [[NSUserDefaults standardUserDefaults] setObject:priceAndQuantityList forKey:@"priceAndQuantityList"];
+        // 同步資料
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
+
 }
-    
+
+
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//}
     
     // Set section title with titleArray
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -392,12 +419,12 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
         case 3:
         return [_titleArray objectAtIndex:section];
         break;
-//        case 4:
-//        return [_titleArray objectAtIndex:section];
-//        break;
-//        case 5:
-//        return [_titleArray objectAtIndex:section];
-//        break;
+        case 4:
+        return [_titleArray objectAtIndex:section];
+        break;
+        case 5:
+        return [_titleArray objectAtIndex:section];
+        break;
         default:
         return nil;
         break;
@@ -415,6 +442,7 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return 1;
 }
+    
     
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CoverPhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CoverPhotoCell" forIndexPath:indexPath];
@@ -524,29 +552,10 @@ static NSString *addRangeCellIdentifier = @"AddRangeCell";
 }
     
     
-    //-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    //    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    //
-    //
-    //    switch (indexPath.section) {
-    //        case 0:
-    //            if (indexPath.row == 0) {
-    //
-    //            }
-    //            break;
-    //        case 1:
-    //            if (indexPath.row == 0) {
-    //
-    //            }
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //
-    //    NSLog(@"%ld",(long)indexPath.section);
-    //    NSLog(@"%ld",(long)indexPath.row);
-    
-    //}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
     
     
     /*

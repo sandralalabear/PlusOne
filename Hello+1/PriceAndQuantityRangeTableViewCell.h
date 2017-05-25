@@ -10,8 +10,9 @@
 
 @interface PriceAndQuantityRangeTableViewCell : UITableViewCell
 
-    @property (weak, nonatomic) IBOutlet UILabel *minQuantityLabel;
-    @property (weak, nonatomic) IBOutlet UITextField *minQuantityPrice;
+    @property (weak, nonatomic) IBOutlet UITextField *quantityTextField;
+
+    @property (weak, nonatomic) IBOutlet UITextField *priceTextField;
     
     
 @end

@@ -1,14 +1,14 @@
 //
-//  DealDescriptionTableViewCell.m
-//  Hello+1
+//  ShippingTableViewCell.m
+//  
 //
-//  Created by Sandra Wei on 2017/5/20.
-//  Copyright © 2017年 Appbear. All rights reserved.
+//  Created by Sandra Wei on 2017/5/24.
+//
 //
 
-#import "DealDescriptionTableViewCell.h"
+#import "ShippingTableViewCell.h"
 
-@implementation DealDescriptionTableViewCell
+@implementation ShippingTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

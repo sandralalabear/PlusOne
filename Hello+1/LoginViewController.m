@@ -12,26 +12,61 @@
 
 @interface LoginViewController ()
 
-@property (weak, nonatomic) IBOutlet FBSDKLoginButton *login;
 
+    
 @end
 
 @implementation LoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    FBSDKLoginButton *fbLoginButton = [[FBSDKLoginButton alloc] init];
     
-    // Check if only one user log in at a time
-    if ([FBSDKAccessToken currentAccessToken]) {
-        // User is logged in, do work such as go to next view controller.
-    }
+    [self.view addSubview:fbLoginButton];
     
-    self.login.readPermissions =
+    fbLoginButton.readPermissions =
     @[@"public_profile", @"email", @"user_friends"];
-
-   
-
 }
+    
+- (void) fbLoginButton:(FBSDKLoginButton *)fbLoginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error {
+    
+    NSDictionary *demandInfo = @{@"fields": @"email, first_name, id, last_name, name, picture"};
+    
+    [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:demandInfo] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        
+        NSLog(@"%@",result);
+        
+        FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+        NSLog(@"%@",accessToken);
+        
+        NSString *userEmail = result[@"email"];
+        NSLog(@"%@",userEmail);
+        
+        NSString *firstName = result[@"first_name"];
+        NSLog(@"%@",firstName);
+        
+        NSString *lastName = result[@"last_name"];
+        NSLog(@"%@",lastName);
+        
+        NSString *userID = result[@"id"];
+        NSLog(@"%@",userID);
+        
+        NSString *userName = result[@"name"];
+        NSLog(@"%@",userName);
+        
+        //        NSDictionary *picture = result[@"picture"];
+        //        NSDictionary *data = picture[@"data"];
+        //        NSString *userPictureURL = data[@"url"];
+        NSString *userPictureURL = [[[result valueForKey:@"picture"] valueForKey:@"data"] valueForKey:@"url"];
+        NSLog(@"%@",userPictureURL);
+    }];
+}
+    
+- (void)loginButtonDidLogOut:(FBSDKLoginButton *)fbLoginButton {
+    NSLog(@"log out %@",[FBSDKAccessToken currentAccessToken]);
+}
+
 
 
 - (void)didReceiveMemoryWarning {

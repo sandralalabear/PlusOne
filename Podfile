@@ -12,6 +12,6 @@ pod "FBSDKLoginKit";
 pod "AFNetworking";
 pod 'TWPhotoPicker', '~> 1.0.0'
 
-
+pod 'XLForm', '~> 3.0'
 end
 

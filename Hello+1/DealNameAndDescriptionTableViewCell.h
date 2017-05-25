@@ -10,7 +10,7 @@
 
 @interface DealNameAndDescriptionTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UITextField *dealNameTextField;
-
+@property (weak, nonatomic) IBOutlet UITextView *dealDescriptionTextView;
 
 
 @end

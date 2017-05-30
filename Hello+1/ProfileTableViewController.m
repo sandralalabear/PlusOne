@@ -9,8 +9,10 @@
 #import "ProfileTableViewController.h"
 #import "CreateADealTableViewController.h"
 #import "LoginViewController.h"
+#import "AccountViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AFNetworking.h>
+#import "Deal.h"
 
 @interface ProfileTableViewController () <UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 @property (nonatomic,strong) NSMutableArray * profileArray;
@@ -133,8 +135,13 @@
             [self.profileImageBtn setImage:self.modifiedImage forState:normal];
         } else if ([_selectedBtnName isEqualToString:@"createADealBtn"]) {
             CreateADealTableViewController * createADeal = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateADealTableViewController"];
-            createADeal.coverPhoto =_modifiedImage;
+            
+            createADeal.deal = [[Deal alloc] init];
+            createADeal.deal.coverPhoto = _modifiedImage;
+            
             [self.navigationController pushViewController:createADeal animated:YES];
+            
+            
         }
         
         NSLog(@"Original JPG Size: %ld, Modified JPG Size: %ld",(unsigned long)originalJPGData.length,modifiedJPGData.length);
@@ -240,6 +247,11 @@
     NSLog(@"%ld",(long)indexPath.row);
 }
 
+- (IBAction)editProfileBtnPressed:(UIButton *)sender {
+    AccountViewController *accountVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AccountViewController"];
+    // TODO accountVC.username = ...
+    [self showViewController:accountVC sender:nil];
+}
 
 /*
 // Override to support conditional editing of the table view.

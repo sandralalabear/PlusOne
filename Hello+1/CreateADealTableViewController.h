@@ -19,14 +19,12 @@
 #import "NMRangeSlider.h"
 #import "XLFormViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-
-
-
+#import "Deal.h"
+#import "DealStore.h"
 
 @interface CreateADealTableViewController : UITableViewController <UICollectionViewDelegate,UICollectionViewDataSource>
-
-
-@property (nonatomic,strong) UIImage * coverPhoto;
+    
+@property (nonatomic,strong) Deal *deal;
 @property (nonatomic,strong) UITextView *endingDateTextField;
 
 @end

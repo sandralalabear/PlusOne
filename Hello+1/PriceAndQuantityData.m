@@ -10,4 +10,13 @@
 
 @implementation PriceAndQuantityData
 
+- (id)init {
+    if (self = [super init]) {
+        _price = 0;
+        _quantity = 0;
+    }
+    return self;
+}
+    
+    
 @end

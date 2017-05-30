@@ -21,35 +21,27 @@ static NSString *ShippingTableViewCellIdentifier = @"ShippingTableViewCell";
 static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTableViewCell";
 
 @interface CreateADealTableViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextViewDelegate,UITextFieldDelegate>
-    {
-        NSMutableArray *priceAndQuantityList;
-    }
-    @property (nonatomic,strong) NSMutableArray *titleArray;
-    @property (nonatomic,strong) NSMutableArray *createADealArray;
-    @property (nonatomic,strong) NSArray *dealPhotos;
-    @property (nonatomic,strong) NSArray *dealNameandDescription;
-    @property (nonatomic,strong) NSArray *condition;
-    @property (nonatomic,strong) NSArray *paymentArray;
-    @property (nonatomic,strong) NSArray *shippingArray;
 
-
-    @property (nonatomic,strong) NSMutableArray *priceAndQuantityArray;
-    @property (nonatomic,strong) NSArray *paymentAndShipping;
-    
-    @property (nonatomic,strong) UIImage *modifiedImage;
-    
-    @property (nonatomic,strong) NSString *dealNameText;
-    @property (nonatomic,strong) UITextView *dealDescriptionTextView;
-    @property (nonatomic,strong) UIToolbar *keyboardDoneToolBar;
-    
-    @property (nonatomic,strong) NSDate *endingDate;
-    @property (nonatomic,strong) NSDateFormatter *endingDateFormatter;
-    @property (nonatomic,strong) UIDatePicker *datePicker;
-    @property (nonatomic,strong) UIToolbar *datePickerToolbar;
-    
+@property (nonatomic,strong) NSMutableArray *titleArray;
+@property (nonatomic,strong) NSMutableArray *createADealArray;
+@property (nonatomic,strong) NSArray *dealPhotos;
+@property (nonatomic,strong) NSArray *dealNameandDescription;
+@property (nonatomic,strong) NSArray *condition;
+@property (nonatomic,strong) NSArray *paymentArray;
+@property (nonatomic,strong) NSArray *shippingArray;
+@property (nonatomic,strong) NSMutableArray *priceAndQuantityArray;
+@property (nonatomic,strong) NSArray *paymentAndShipping;
+@property (nonatomic,strong) UIImage *modifiedImage;
+@property (nonatomic,strong) UIToolbar *dealDescriptionKeyboardToolbar;
+@property (nonatomic,strong) UIToolbar *priceRangeTextFieldKeyboardToolbar;
+@property (nonatomic,strong) NSDateFormatter *endingDateFormatter;
+@property (nonatomic,strong) UIDatePicker *datePicker;
+@property (nonatomic,strong) UIToolbar *datePickerToolbar;
    
+@property (nonatomic,strong) DealStore *dealStore;
+
     
-    @end
+@end
 
 @implementation CreateADealTableViewController
     
@@ -66,47 +58,24 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     _dealNameandDescription = [[NSArray alloc] initWithObjects:@"dealName",@"dealDescription", nil];
     _condition = [[NSArray alloc] initWithObjects:@"Ending date",@"Set min quantity and max quantity", nil];
     _priceAndQuantityArray = [[NSMutableArray alloc] initWithObjects:@"price",@"quantity", nil];
-    //_paymentArray = [[NSMutableArray alloc] initWithObjects:@"Paypal",@"Money transfer",@"Credit card", @"Payment upon pickup", nil];
+
     // Expandable section
     _paymentArray = [[NSMutableArray alloc] initWithObjects:@"title",@"Paypal",@"Money transfer",@"Credit card", @"Payment upon pickup", nil];
-    _shippingArray = [[NSMutableArray alloc] initWithObjects:@"title",@"Express",@"Payment upon pickup",@"Ezship",nil];
+    _shippingArray = [[NSMutableArray alloc] initWithObjects:@"title",@"Express",@"Ezship",nil];
     _createADealArray = [[NSMutableArray alloc] initWithObjects:_dealPhotos,_dealNameandDescription,_condition,_priceAndQuantityArray,_paymentArray,_shippingArray, nil];
-    
-
-    
-    
-  
-    
+   
     // Set ending date picker
-    [self configureEndingDatePicker];
-    // Set min and max slider
-    // [self configureLabelSlider];
+    _datePicker = [self createEndingDatePicker];
+    _datePickerToolbar = [self createEndingDatePickerToolbar];
     
-    [self addDoneToolBarToKeyboard:_dealDescriptionTextView];
-    [self createEndingDateFormatter];
-    [self loadDealData];
-    priceAndQuantityList = [self loadPriceAndQuantityData];
-    [self adddoneButtontoPriceRangetextfiledKeyboard];
-    
+    _dealDescriptionKeyboardToolbar = [self createDealDescriptionKeyboardToolbar];
+    _priceRangeTextFieldKeyboardToolbar = [self createPriceRangeTextFieldKeyboardToolbar];
+    _endingDateFormatter = [self createEndingDateFormatter];
+   
+    _dealStore = [[DealStore alloc] init];
 }
-// when deal saved then pass all datas to next page
 - (void)savePressed {
-    //...
-}
-    
-// 假資料
-- (NSMutableArray*) loadPriceAndQuantityData {
-    PriceAndQuantityData *tmpdata = [[PriceAndQuantityData alloc] init];
-    tmpdata.price = @500;
-    tmpdata.quantity = @20;
-    PriceAndQuantityData *tmpdata2 = [[PriceAndQuantityData alloc] init];
-    tmpdata2.price = @400;
-    tmpdata2.quantity = @40;
-    PriceAndQuantityData *tmpdata3 = [[PriceAndQuantityData alloc] init];
-    tmpdata3.price = @300;
-    tmpdata3.quantity = @60;
-    NSMutableArray *fakedata = [[NSMutableArray alloc] initWithObjects:tmpdata,tmpdata2,tmpdata3, nil];
-    return fakedata;
+    [_dealStore save:_deal];
 }
     
 - (void) viewDidAppear: (BOOL)animated {
@@ -118,106 +87,66 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     [super didReceiveMemoryWarning];
 }
 
+
     
+#pragma mark - Create Toolbar done button to keyboard
+    
+- (UIToolbar *)createToolbar:(SEL) doneButtonClickedAction {
+    UIToolbar * toolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
+    UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:doneButtonClickedAction];
+    [toolbar sizeToFit];
+    [toolbar setItems:[[NSArray alloc] initWithObjects: extraSpace, doneButton, nil]];
+    return toolbar;
+}
+
 #pragma mark - Price and quantity range methods
 
 - (IBAction)addARangeButton:(id)sender {
-    [self.tableView beginUpdates];
     PriceAndQuantityData *toAdd = [[PriceAndQuantityData alloc] init];
     // default number in textfield
-    toAdd.price = @0;
-    toAdd.quantity = @0;
-    NSLog(@"aaaa%@,%@,%@",toAdd.price,toAdd.quantity,toAdd);
-    [priceAndQuantityList addObject:toAdd];
-    NSIndexPath *newPath = [NSIndexPath indexPathForRow:priceAndQuantityList.count-1 inSection:3];
+    toAdd.price = 0;
+    toAdd.quantity = 0;
+    [_deal.priceAndQuantityList addObject:toAdd];
+    
+    NSIndexPath *newPath = [NSIndexPath indexPathForRow:(_deal.priceAndQuantityList.count - 1) inSection:3];
+    [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
-}
-
-- (void)adddoneButtontoPriceRangetextfiledKeyboard {
-    _keyboardDoneToolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
-    UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)];
     
-    [_keyboardDoneToolBar sizeToFit];
-    [_keyboardDoneToolBar setItems:[[NSArray alloc] initWithObjects: extraSpace, doneButton, nil]];
 }
-
-    
-#pragma mark - Set TextViewkeyboard dissmiss
-- (void)doneButtonClickedDismissKeyboard {
-    [self.view endEditing:YES];
+- (UIToolbar *)createPriceRangeTextFieldKeyboardToolbar {
+    return [self createToolbar:@selector(priceAndRangeDoneButtonPressed)];
 }
     
-#pragma mark - Set textview placeholder and done button for keyboard
+#pragma mark - Save deal name
     
-- (void)textViewDidBeginEditing:(UITextView *)textView {
-    if ([textView.text isEqualToString:@"Input your deal description here..."]){
-        textView.text=@"";
-        textView.textColor=[UIColor blackColor];
-    }
-}
-- (void)textViewDidEndEditing:(UITextView *)textView {
-    if(textView.text.length < 1){
-        textView.text = @"Input your deal description here...";
-        textView.textColor = [UIColor colorWithRed:199.0/255.0 green:199.0/255.0 blue:205.0/255.0 alpha:0.9];
-    }
-}
-    
-- (void)addDoneToolBarToKeyboard:(UITextView *)textView {
-    _keyboardDoneToolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
-    UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)];
-
-    [_keyboardDoneToolBar sizeToFit];
-    [_keyboardDoneToolBar setItems:[[NSArray alloc] initWithObjects: extraSpace, doneButton, nil]];
-}
-    
-#pragma mark - Date picker
-    
-- (void) configureEndingDatePicker {
-    // Initialise UIDatePicker
-    _datePicker = [[UIDatePicker alloc] init];
-    _datePicker.datePickerMode = UIDatePickerModeDate;
-    // Setup UIToolbar for UIDatePicker
-    _datePickerToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
-    UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(dismissPicker)]; // method to dismiss the picker when the "Done" button is pressed
-    [_datePickerToolbar setItems:[[NSArray alloc] initWithObjects: extraSpace, doneButton, nil]];
-}
-    
-- (void)loadDealData {
-    self.endingDate = [NSDate date];
-}
-    
-- (void)createEndingDateFormatter {
-    self.endingDateFormatter = [[NSDateFormatter alloc] init];
-    [self.endingDateFormatter setDateFormat:@"yyyy/MM/dd"];
-}
-    
-- (void)dismissPicker {
-    _endingDate = _datePicker.date;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:2];
-    DatePickerTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    cell.endingDateTextField.text = [_endingDateFormatter stringFromDate:_endingDate];
-    [self.view endEditing:YES];
-}
-    
-#pragma mark - Textfield Keyboard dismiss funciton with return type done
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    _deal.dealNameText = textField.text;
     [self.view endEditing:YES];
     return YES;
 }
     
+#pragma mark - Save deal description text
     
-#pragma mark - Slider of min and max quantity
-- (void) configureLabelSlider: (NMRangeSlider *)labelSlider {
-    labelSlider.minimumValue = 0;
-    labelSlider.maximumValue = 500;
-    labelSlider.lowerValue = 0;
-    labelSlider.upperValue = 500;
-    labelSlider.minimumRange = 1;
+- (void)dealDescriptionTextViewDoneButtonClicked {
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+    DealNameAndDescriptionTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    _deal.dealDescriptionText = cell.dealDescriptionTextView.text;
+    [self.view endEditing:YES];
 }
+    
+#pragma mark - Save ending date
+    
+- (void)dismissPicker {
+    _deal.endingDate = _datePicker.date;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+    DatePickerTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    cell.endingDateTextField.text = [_endingDateFormatter stringFromDate:_deal.endingDate];
+    [self.view endEditing:YES];
+}
+
+#pragma mark - Save min and max slider
     
 - (void) updateSliderLabels {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:2];
@@ -228,17 +157,119 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     lowerCenter.y = (cell.labelSlider.center.y - 30.0f);
     cell.lowerLabel.center = lowerCenter;
     cell.lowerLabel.text = [NSString stringWithFormat:@"%d", (int) cell.labelSlider.lowerValue];
+    NSNumber *lowerNumber = [NSNumber numberWithDouble:cell.labelSlider.lowerValue];
+    _deal.minQuantity = [lowerNumber integerValue];
+    //NSLog(@"_deal.minQuantity: %ld",(long)_deal.minQuantity);
     
     CGPoint upperCenter;
     upperCenter.x = (cell.labelSlider.upperCenter.x + cell.labelSlider.frame.origin.x);
     upperCenter.y = (cell.labelSlider.center.y - 30.0f);
     cell.upperLabel.center = upperCenter;
     cell.upperLabel.text = [NSString stringWithFormat:@"%d", (int)cell.labelSlider.upperValue];
-    NSLog(@"i'm heredsfsdf , %f", cell.labelSlider.center.y);
-    NSLog(@"%f", cell.labelSlider.frame.origin.x);
-    NSLog(@"i'm here , %@",[NSString stringWithFormat:@"%d", (int) cell.labelSlider.lowerValue]);
+    NSNumber *upperNumber = [NSNumber numberWithDouble:cell.labelSlider.upperValue];
+    _deal.maxQuantity = [upperNumber integerValue];
+    //NSLog(@"_deal.maxQuantity: %ld",(long)_deal.maxQuantity);
+    
 }
     
+#pragma mark - Save price and quantity data
+    
+- (void)priceAndRangeDoneButtonPressed {
+    
+    for (int i = 0; i < _deal.priceAndQuantityList.count; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:3];
+        PriceAndQuantityRangeTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        ((PriceAndQuantityData *)_deal.priceAndQuantityList[i]).price = [cell.priceTextField.text integerValue];
+        ((PriceAndQuantityData *)_deal.priceAndQuantityList[i]).quantity = [cell.quantityTextField.text integerValue];
+    }
+    
+    [self.view endEditing:YES];
+}
+
+#pragma mark - Save payment methods and shipping methods switch value
+
+- (IBAction)paymetMethodSwitchChanged:(UISwitch *)sender {
+    
+    PaymentTableViewCell *cell = (PaymentTableViewCell *)sender.superview.superview;
+    
+    if ([cell.paymentMethodTextField.text isEqual: @"Money transfer"]) {
+        _deal.moneyTranfer = cell.paymentSwitch.isOn;
+    }
+    
+    if ([cell.paymentMethodTextField.text isEqual: @"Credit card"]) {
+        _deal.creditCard = cell.paymentSwitch.isOn;
+    }
+    
+    if ([cell.paymentMethodTextField.text isEqual: @"Payment upon pickup"]) {
+        _deal.paymentUponPickup = cell.paymentSwitch.isOn;
+    }
+    NSLog(@"m: %id",cell.paymentSwitch.isOn);
+}
+- (IBAction)shippingMethodSwitchChanged:(UISwitch *)sender {
+    
+    ShippingTableViewCell *cell = (ShippingTableViewCell *)sender.superview.superview;
+    if ([cell.shippingMethodTextField.text isEqual: @"Express"]) {
+        _deal.express = cell.shippingSwitch.isOn;
+    }
+    
+    if ([cell.shippingMethodTextField.text isEqual: @"Ezship"]) {
+        _deal.ezship = cell.shippingSwitch.isOn;
+    }
+    NSLog(@"m: %id",cell.shippingSwitch.isOn);
+
+}
+    
+    
+    
+#pragma mark - Set textview placeholder and done button for keyboard
+    
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    if ([textView.text isEqualToString:@"Input your deal description here..."]){
+        textView.text=@"";
+        textView.textColor=[UIColor blackColor];
+    }
+}
+    
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if(textView.text.length < 1){
+        textView.text = @"Input your deal description here...";
+        textView.textColor = [UIColor colorWithRed:199.0/255.0 green:199.0/255.0 blue:205.0/255.0 alpha:0.9];
+    }
+}
+    
+- (UIToolbar *)createDealDescriptionKeyboardToolbar {
+    return [self createToolbar:@selector(dealDescriptionTextViewDoneButtonClicked)];
+}
+    
+    
+#pragma mark - Date picker
+    
+- (UIDatePicker *)createEndingDatePicker {
+    UIDatePicker *datePicker = [[UIDatePicker alloc] init];
+    datePicker.datePickerMode = UIDatePickerModeDate;
+    return datePicker;
+}
+    
+- (UIToolbar *)createEndingDatePickerToolbar {
+    return [self createToolbar:@selector(dismissPicker)];
+}
+ 
+- (NSDateFormatter *)createEndingDateFormatter {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy/MM/dd"];
+    return dateFormatter;
+}
+    
+
+#pragma mark - Slider of min and max quantity
+- (void) configureLabelSlider: (NMRangeSlider *)labelSlider {
+    labelSlider.minimumValue = 0;
+    labelSlider.maximumValue = 500;
+    labelSlider.lowerValue = 0;
+    labelSlider.upperValue = 500;
+    labelSlider.minimumRange = 1;
+}
+
 // Handle control value changed events just like a normal slider
 - (IBAction)labelSliderChanged:(NMRangeSlider*)sender {
     [self updateSliderLabels];
@@ -268,7 +299,7 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     NSMutableIndexSet * iset = [NSMutableIndexSet indexSet];
     [iset addIndex:section];
     if (section == 3) {
-        return priceAndQuantityList.count + 1;
+        return _deal.priceAndQuantityList.count + 1;
     } else {
         return [[_createADealArray objectAtIndex:section] count];
     }
@@ -297,16 +328,22 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
                 DealNameAndDescriptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:DealNameAndDescriptionTableViewCellIdentifier forIndexPath:indexPath];
                 cell.dealNameTextField.delegate = self;
                 cell.dealNameTextField.returnKeyType = UIReturnKeyDone;
-                cell.dealNameTextField.text = _dealNameText;
+                cell.dealNameTextField.text = _deal.dealNameText;
                 cellToReturn = cell;
             } else {
                 // Set Deal description in textView
                 DealNameAndDescriptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:DealDescriptionTableViewCellIdentifier];
                 cell.dealDescriptionTextView.delegate = self;
-                cell.dealDescriptionTextView.inputAccessoryView = _keyboardDoneToolBar;
-                cell.dealDescriptionTextView.text = @"Input your deal description here...";
+                cell.dealDescriptionTextView.inputAccessoryView = _dealDescriptionKeyboardToolbar;
+                
                 cell.dealDescriptionTextView.textColor = [UIColor colorWithRed:199.0/255.0 green:199.0/255.0 blue:205.0/255.0 alpha:0.8];
-                _dealDescriptionTextView = cell.dealDescriptionTextView;
+                
+                if (_deal.dealDescriptionText == nil || [_deal.dealDescriptionText  isEqual: @""]) {
+                    cell.dealDescriptionTextView.text = @"Input your deal description here...";
+                } else {
+                    cell.dealDescriptionTextView.text = _deal.dealDescriptionText;
+                }
+                
                 cellToReturn = cell;
             }
             break;
@@ -324,7 +361,7 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
                 cell.endingDateTextField.inputView = _datePicker;
                 // Set UITextfield's inputAccessoryView as UIToolbar
                 cell.endingDateTextField.inputAccessoryView = _datePickerToolbar;
-                cell.endingDateTextField.text = [_endingDateFormatter stringFromDate:_endingDate];
+                cell.endingDateTextField.text = [_endingDateFormatter stringFromDate:_deal.endingDate];
                 cellToReturn = cell;
             } else if (indexPath.row == 1) {
                 // Set min and max slider
@@ -336,12 +373,14 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
         }
         case 3:
         {
-            if(indexPath.row < priceAndQuantityList.count) {
+            if(indexPath.row < _deal.priceAndQuantityList.count) {
                 NSLog(@"%ld", (long)indexPath.row);
                 PriceAndQuantityRangeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:priceAndQuantityCellIdentifier forIndexPath:indexPath];
-                PriceAndQuantityData *priceAndQuantitydata = priceAndQuantityList[indexPath.row];
-                cell.priceTextField.text = [NSString stringWithFormat:@"%@", priceAndQuantitydata.price];
-                cell.quantityTextField.text = [NSString stringWithFormat:@"%@",priceAndQuantitydata.quantity];
+                PriceAndQuantityData *priceAndQuantitydata = _deal.priceAndQuantityList[indexPath.row];
+                cell.priceTextField.text = [NSString stringWithFormat:@"%ld", (long)priceAndQuantitydata.price];
+                cell.quantityTextField.text = [NSString stringWithFormat:@"%ld",(long)priceAndQuantitydata.quantity];
+                cell.quantityTextField.inputAccessoryView = _priceRangeTextFieldKeyboardToolbar;
+                cell.priceTextField.inputAccessoryView = _priceRangeTextFieldKeyboardToolbar;
                 cellToReturn = cell;
             } else {
                 PriceAndQuantityRangeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:addRangeCellIdentifier forIndexPath:indexPath];
@@ -374,6 +413,8 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
         } else {
             ShippingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ShippingMethodsTableViewCellIdentifier forIndexPath:indexPath];
             cell.shippingMethodTextField.text = [_shippingArray objectAtIndex:indexPath.row];
+            
+            
             cellToReturn = cell;
         }
         break;
@@ -382,22 +423,25 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     }
     return cellToReturn;
 }
-    // Delete
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // If row is deleted, remove it from the list.
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        [priceAndQuantityList removeObjectAtIndex:indexPath.row];
-        // 存回至 NSUserDefault
-        [[NSUserDefaults standardUserDefaults] setObject:priceAndQuantityList forKey:@"priceAndQuantityList"];
-        // 同步資料
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }
 
-}
+
+    
+//    // Delete
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    // If row is deleted, remove it from the list.
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        
+//        [priceAndQuantityList removeObjectAtIndex:indexPath.row];
+//        // 存回至 NSUserDefault
+//        [[NSUserDefaults standardUserDefaults] setObject:priceAndQuantityList forKey:@"priceAndQuantityList"];
+//        // 同步資料
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+//        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+//    }
+//
+//}
 
 
 //-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -439,16 +483,15 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     return 1;
 }
     
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return 1;
 }
     
-    
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CoverPhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CoverPhotoCell" forIndexPath:indexPath];
     
     // Configure the cell
-    cell.coverPhotoImage.image = _coverPhoto; /*接前面的照片*/
+    cell.coverPhotoImage.image = _deal.coverPhoto; /*接前面的照片*/
     
     return cell;
 }
@@ -471,7 +514,7 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     [self presentViewController:alert animated:true completion:nil];
 }
     
--(void)launchImagePickerWithSourceType:(UIImagePickerControllerSourceType)type {
+- (void)launchImagePickerWithSourceType:(UIImagePickerControllerSourceType)type {
     // Check if source type is available or not
     if(![UIImagePickerController isSourceTypeAvailable:type]) {
         NSLog(@"Invalid Source Type");
@@ -487,7 +530,7 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     [self presentViewController:picker animated:true completion:nil];
 }
     
--(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
     NSString * type = info[UIImagePickerControllerMediaType];
     NSLog(@"info:%@",info.description);
@@ -520,7 +563,7 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
 }
     
     // Compress images
--(UIImage *) modifyImage:(UIImage *) inputImage {
+- (UIImage *)modifyImage:(UIImage *) inputImage {
     CGFloat maxLength = 1024.0;
     CGSize targetSize;
     UIImage * finalImage;
@@ -552,7 +595,7 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
 }
     
     
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }

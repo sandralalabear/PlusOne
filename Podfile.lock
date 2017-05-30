@@ -24,12 +24,14 @@ PODS:
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.21.0):
     - FBSDKCoreKit
+  - JVFloatLabeledTextField (1.1.1)
   - TWPhotoPicker (1.0.0)
   - XLForm (3.3.0)
 
 DEPENDENCIES:
   - AFNetworking
   - FBSDKLoginKit
+  - JVFloatLabeledTextField
   - TWPhotoPicker (~> 1.0.0)
   - XLForm (~> 3.0)
 
@@ -38,9 +40,10 @@ SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   FBSDKCoreKit: 8a372ab194b5c7c26355c1920ef52dbeb44bc222
   FBSDKLoginKit: a1a5f4b4ac445823a020fbeeaf5f03714a67ff9c
+  JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   TWPhotoPicker: 5e9bcd6097e8602e8243d1bdd54a5cf1afbedcf2
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
 
-PODFILE CHECKSUM: e97f09abf63d204e56dae3cd4832ec0f5a4c22df
+PODFILE CHECKSUM: 7d30a7f22ae4764b3cfeda6da4162b0fe64e545f
 
 COCOAPODS: 1.2.0

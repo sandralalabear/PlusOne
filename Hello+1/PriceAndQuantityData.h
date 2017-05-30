@@ -10,7 +10,7 @@
 
 @interface PriceAndQuantityData : NSObject
 
-@property (nonatomic,strong) NSNumber *price;
-@property (nonatomic,strong) NSNumber *quantity;
+@property NSInteger price;
+@property NSInteger quantity;
     
 @end

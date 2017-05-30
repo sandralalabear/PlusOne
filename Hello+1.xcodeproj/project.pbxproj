@@ -33,12 +33,19 @@
 		1B491E8A1ED576330049DD4B /* CreateADealTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2FF0DF1EC4207400695862 /* CreateADealTableViewController.m */; };
 		1B491E8D1ED57EA10049DD4B /* PaymentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491E8C1ED57EA10049DD4B /* PaymentTableViewCell.m */; };
 		1B491E901ED57EC10049DD4B /* ShippingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491E8F1ED57EC10049DD4B /* ShippingTableViewCell.m */; };
-		1B491E991ED5F4C60049DD4B /* DealData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491E981ED5F4C60049DD4B /* DealData.m */; };
 		1B491EA31ED5FCF10049DD4B /* images (2).jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1B491E9D1ED5FCF10049DD4B /* images (2).jpeg */; };
 		1B491EA51ED5FCF10049DD4B /* images (5).jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1B491E9F1ED5FCF10049DD4B /* images (5).jpeg */; };
 		1B491EA61ED5FCF10049DD4B /* images (6).jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1B491EA01ED5FCF10049DD4B /* images (6).jpeg */; };
 		1B491EA71ED5FCF10049DD4B /* images.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1B491EA11ED5FCF10049DD4B /* images.jpeg */; };
 		1B491EA91ED5FEC80049DD4B /* images (7).jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1B491EA81ED5FEC80049DD4B /* images (7).jpeg */; };
+		1B491ED21ED725B80049DD4B /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491ED11ED725B80049DD4B /* AccountViewController.m */; };
+		1B491ED81ED744D00049DD4B /* FloatLabeledTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491ED71ED744D00049DD4B /* FloatLabeledTextFieldCell.m */; };
+		1B491EDB1ED96A800049DD4B /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491EDA1ED96A800049DD4B /* User.m */; };
+		1B491EDE1ED96B520049DD4B /* UserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491EDD1ED96B520049DD4B /* UserStore.m */; };
+		1B491EE11ED9F8600049DD4B /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491EE01ED9F8600049DD4B /* SignUpViewController.m */; };
+		1B491EE41EDAC0A50049DD4B /* SignUpTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491EE31EDAC0A50049DD4B /* SignUpTableViewCell.m */; };
+		1B491EE71EDC19FB0049DD4B /* Deal.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491EE61EDC19FB0049DD4B /* Deal.m */; };
+		1B491EEA1EDC57DD0049DD4B /* DealStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B491EE91EDC57DD0049DD4B /* DealStore.m */; };
 		1B9029AA1EA7404B002F11CE /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9029A91EA7404B002F11CE /* LoginViewController.m */; };
 		1B990E291ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B990E281ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.m */; };
 		1BC751E21E9E2CB700796C41 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC751E11E9E2CB700796C41 /* main.m */; };
@@ -91,13 +98,27 @@
 		1B491E8C1ED57EA10049DD4B /* PaymentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentTableViewCell.m; sourceTree = "<group>"; };
 		1B491E8E1ED57EC10049DD4B /* ShippingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShippingTableViewCell.h; sourceTree = "<group>"; };
 		1B491E8F1ED57EC10049DD4B /* ShippingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShippingTableViewCell.m; sourceTree = "<group>"; };
-		1B491E971ED5F4C60049DD4B /* DealData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DealData.h; sourceTree = "<group>"; };
-		1B491E981ED5F4C60049DD4B /* DealData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DealData.m; sourceTree = "<group>"; };
 		1B491E9D1ED5FCF10049DD4B /* images (2).jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "images (2).jpeg"; sourceTree = "<group>"; };
 		1B491E9F1ED5FCF10049DD4B /* images (5).jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "images (5).jpeg"; sourceTree = "<group>"; };
 		1B491EA01ED5FCF10049DD4B /* images (6).jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "images (6).jpeg"; sourceTree = "<group>"; };
 		1B491EA11ED5FCF10049DD4B /* images.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = images.jpeg; sourceTree = "<group>"; };
 		1B491EA81ED5FEC80049DD4B /* images (7).jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "images (7).jpeg"; sourceTree = "<group>"; };
+		1B491ED01ED725B80049DD4B /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
+		1B491ED11ED725B80049DD4B /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		1B491ED61ED744D00049DD4B /* FloatLabeledTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FloatLabeledTextFieldCell.h; sourceTree = "<group>"; };
+		1B491ED71ED744D00049DD4B /* FloatLabeledTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FloatLabeledTextFieldCell.m; sourceTree = "<group>"; };
+		1B491ED91ED96A800049DD4B /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		1B491EDA1ED96A800049DD4B /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		1B491EDC1ED96B520049DD4B /* UserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserStore.h; sourceTree = "<group>"; };
+		1B491EDD1ED96B520049DD4B /* UserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserStore.m; sourceTree = "<group>"; };
+		1B491EDF1ED9F8600049DD4B /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		1B491EE01ED9F8600049DD4B /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		1B491EE21EDAC0A50049DD4B /* SignUpTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpTableViewCell.h; sourceTree = "<group>"; };
+		1B491EE31EDAC0A50049DD4B /* SignUpTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpTableViewCell.m; sourceTree = "<group>"; };
+		1B491EE51EDC19FB0049DD4B /* Deal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Deal.h; sourceTree = "<group>"; };
+		1B491EE61EDC19FB0049DD4B /* Deal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Deal.m; sourceTree = "<group>"; };
+		1B491EE81EDC57DD0049DD4B /* DealStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DealStore.h; sourceTree = "<group>"; };
+		1B491EE91EDC57DD0049DD4B /* DealStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DealStore.m; sourceTree = "<group>"; };
 		1B9029A81EA7404B002F11CE /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		1B9029A91EA7404B002F11CE /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		1B990E271ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverPhotoCollectionViewCell.h; sourceTree = "<group>"; };
@@ -206,6 +227,8 @@
 		1BC751E01E9E2CB700796C41 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1BF404E21ED0DA0D0081D0DA /* NMRangeSlider.h */,
+				1BF404E31ED0DA0D0081D0DA /* NMRangeSlider.m */,
 				1B491E9D1ED5FCF10049DD4B /* images (2).jpeg */,
 				1B491E9F1ED5FCF10049DD4B /* images (5).jpeg */,
 				1B491EA01ED5FCF10049DD4B /* images (6).jpeg */,
@@ -243,6 +266,10 @@
 				1B491E8C1ED57EA10049DD4B /* PaymentTableViewCell.m */,
 				1B491E8E1ED57EC10049DD4B /* ShippingTableViewCell.h */,
 				1B491E8F1ED57EC10049DD4B /* ShippingTableViewCell.m */,
+				1B491ED61ED744D00049DD4B /* FloatLabeledTextFieldCell.h */,
+				1B491ED71ED744D00049DD4B /* FloatLabeledTextFieldCell.m */,
+				1B491EE21EDAC0A50049DD4B /* SignUpTableViewCell.h */,
+				1B491EE31EDAC0A50049DD4B /* SignUpTableViewCell.m */,
 			);
 			name = "Tableview custom cells";
 			sourceTree = "<group>";
@@ -252,8 +279,12 @@
 			children = (
 				1B322BF81EA3BB5400BD60F6 /* ProfileTableViewController.h */,
 				1B322BF91EA3BB5400BD60F6 /* ProfileTableViewController.m */,
+				1B491ED01ED725B80049DD4B /* AccountViewController.h */,
+				1B491ED11ED725B80049DD4B /* AccountViewController.m */,
 				1B2FF0DE1EC4207400695862 /* CreateADealTableViewController.h */,
 				1B2FF0DF1EC4207400695862 /* CreateADealTableViewController.m */,
+				1B491EDF1ED9F8600049DD4B /* SignUpViewController.h */,
+				1B491EE01ED9F8600049DD4B /* SignUpViewController.m */,
 				1B9029A81EA7404B002F11CE /* LoginViewController.h */,
 				1B9029A91EA7404B002F11CE /* LoginViewController.m */,
 			);
@@ -263,12 +294,16 @@
 		1BF404F11ED191880081D0DA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1B491E971ED5F4C60049DD4B /* DealData.h */,
-				1B491E981ED5F4C60049DD4B /* DealData.m */,
+				1B491EE51EDC19FB0049DD4B /* Deal.h */,
+				1B491EE61EDC19FB0049DD4B /* Deal.m */,
+				1B491EE81EDC57DD0049DD4B /* DealStore.h */,
+				1B491EE91EDC57DD0049DD4B /* DealStore.m */,
 				1B491E871ED532900049DD4B /* PriceAndQuantityData.h */,
 				1B491E881ED532900049DD4B /* PriceAndQuantityData.m */,
-				1BF404E21ED0DA0D0081D0DA /* NMRangeSlider.h */,
-				1BF404E31ED0DA0D0081D0DA /* NMRangeSlider.m */,
+				1B491ED91ED96A800049DD4B /* User.h */,
+				1B491EDA1ED96A800049DD4B /* User.m */,
+				1B491EDC1ED96B520049DD4B /* UserStore.h */,
+				1B491EDD1ED96B520049DD4B /* UserStore.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -440,23 +475,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B491EDB1ED96A800049DD4B /* User.m in Sources */,
 				1BF404E11ED0CA200081D0DA /* MinAndMaxSliderTableViewCell.m in Sources */,
 				1BF404E41ED0DA0D0081D0DA /* NMRangeSlider.m in Sources */,
+				1B491EE41EDAC0A50049DD4B /* SignUpTableViewCell.m in Sources */,
 				1B491E8D1ED57EA10049DD4B /* PaymentTableViewCell.m in Sources */,
 				1BC751E51E9E2CB700796C41 /* AppDelegate.m in Sources */,
+				1B491EDE1ED96B520049DD4B /* UserStore.m in Sources */,
+				1B491EE71EDC19FB0049DD4B /* Deal.m in Sources */,
+				1B491ED21ED725B80049DD4B /* AccountViewController.m in Sources */,
 				1B491E891ED532900049DD4B /* PriceAndQuantityData.m in Sources */,
 				1BC751E21E9E2CB700796C41 /* main.m in Sources */,
 				1B491E901ED57EC10049DD4B /* ShippingTableViewCell.m in Sources */,
+				1B491ED81ED744D00049DD4B /* FloatLabeledTextFieldCell.m in Sources */,
 				1B491E861ED47E2F0049DD4B /* PriceAndQuantityRangeTableViewCell.m in Sources */,
 				1B2FF0E91EC9800500695862 /* CoverPhotoTableViewCell.m in Sources */,
 				1BF404E81ED184970081D0DA /* NMRangeSlider.h in Sources */,
 				1B322BFA1EA3BB5400BD60F6 /* ProfileTableViewController.m in Sources */,
+				1B491EEA1EDC57DD0049DD4B /* DealStore.m in Sources */,
 				1BF404B61ECEF8C80081D0DA /* DatePickerTableViewCell.m in Sources */,
 				1B9029AA1EA7404B002F11CE /* LoginViewController.m in Sources */,
 				1B990E291ECCC2DC004931F3 /* CoverPhotoCollectionViewCell.m in Sources */,
 				1B491E8A1ED576330049DD4B /* CreateADealTableViewController.m in Sources */,
 				1BF404B31ECEB26A0081D0DA /* DealNameAndDescriptionTableViewCell.m in Sources */,
-				1B491E991ED5F4C60049DD4B /* DealData.m in Sources */,
+				1B491EE11ED9F8600049DD4B /* SignUpViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

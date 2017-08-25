@@ -2,7 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Hello+1.xcodeproj">
+      location = "group:PlusOne.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Pods/Target Support Files/Pods-PlusOne">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

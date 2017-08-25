@@ -13,39 +13,82 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AFNetworking.h>
 #import "Deal.h"
+#import "User.h"
+#import "DealsManagementTableViewController.h"
+#import "ServerCommunicator.h"
+#import "AppDelegate.h"
+#import "AdvanceUIButton.h"
 
 @interface ProfileTableViewController () <UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
-@property (nonatomic,strong) NSMutableArray * profileArray;
-@property (weak, nonatomic) IBOutlet UITableView *profilePageTableView;
-@property (nonatomic,strong) NSArray * hostArray;
-@property (nonatomic,strong) NSArray * settingsArray;
-@property (nonatomic,strong) NSArray * aboutUs;
-@property (nonatomic,strong) NSMutableArray * titleArray;
-@property (nonatomic,strong) UIImage * modifiedImage;
-@property (nonatomic,strong) NSString * selectedBtnName;
+
+@property (nonatomic,strong) NSMutableArray *profileArray;
+@property (nonatomic,strong) NSArray *hostArray;
+@property (nonatomic,strong) NSArray *settingsArray;
+@property (nonatomic,strong) NSArray *aboutUs;
+@property (nonatomic,strong) NSMutableArray *titleArray;
+
+@property (nonatomic,strong) NSString *selectedBtnName;
 
 @property (weak, nonatomic) IBOutlet UIView *profileView;
 @property (weak, nonatomic) IBOutlet UITableView *profileTableView;
-@property (weak, nonatomic) IBOutlet UIButton *profileImageBtn;
+@property (weak, nonatomic) IBOutlet AdvanceUIButton *profileImageBtn;
 
+@property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+@property (weak, nonatomic) IBOutlet UIButton *editProfileBtn;
 
-
+@property User *user;
 
 @end
 
 @implementation ProfileTableViewController
+{
+    ServerCommunicator *comm;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Set navigation title
-    self.navigationItem.title = @"Profile";
+    comm = [ServerCommunicator new];
+    
+    /* 讀資料 start 2017.05.30 */
+    if([[NSUserDefaults standardUserDefaults]objectForKey:@"profilePhoto"] != nil)
+    {
+        [self.profileImageBtn setImage:[UIImage imageWithData:[[NSUserDefaults standardUserDefaults]objectForKey:@"profilePhoto"]] forState:UIControlStateNormal];
+    }
+    else
+    {
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"login"])
+        {
+            NSDictionary *parameters = @{@"username":[[NSUserDefaults standardUserDefaults] objectForKey:@"login"]};
+            NSData *data = [NSData new];
+            [comm doPostJobWithURLString:PROFILE_IMAGE_URL
+                              parameters:parameters
+                                    data:data
+                              completion:^(NSError *error, id result) {
+                                  selectProfileImage = result;
+                                  
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      
+                                      //抓取圖片
+                                      NSString *urlString = [PHOTO_URL stringByAppendingPathComponent:selectProfileImage[0][@"image"]];
+                                      NSURL *url = [NSURL URLWithString:urlString];
+                                      [self.profileImageBtn loadImageWithURL:url];
+                                      
+                                      [self.profileView reloadInputViews];
+                                  });
+                              }];
+        }
+    }
+    /* 讀資料 end 2017.05.30 */
+    
+    self.navigationItem.title = NSLocalizedString(@"Profile", nil);
     
     // initialize arrays in profile array
-    _titleArray = [[NSMutableArray alloc] initWithObjects:@"Host",@"Settings",@"About us", nil];
-    _hostArray = [[NSArray alloc] initWithObjects:@"Create a deal",@"Deals management",@"Payment settings",@"Shipping settings",nil];
-    _settingsArray = [[NSArray alloc] initWithObjects:@"Log in",@"Settings", nil];
-    _aboutUs = [[NSArray alloc] initWithObjects:@"Give us feedback", nil];
+    _titleArray = [[NSMutableArray alloc] initWithObjects: NSLocalizedString(@"Host", nil), NSLocalizedString(@"SETTINGS", nil), NSLocalizedString(@"About us", nil), nil];
+    
+    _hostArray = [[NSArray alloc] initWithObjects:NSLocalizedString(@"Create a deal", nil), NSLocalizedString(@"Deals management", nil), nil];
+    _settingsArray = [[NSArray alloc] initWithObjects:NSLocalizedString(@"Log in", nil),  NSLocalizedString(@"Settings", nil), nil];
+    _aboutUs = [[NSArray alloc] initWithObjects: NSLocalizedString(@"Give us feedback", nil) , nil];
     
     _profileArray = [[NSMutableArray alloc] initWithObjects:_hostArray,_settingsArray,_aboutUs, nil];
     
@@ -57,6 +100,55 @@
     self.profileImageBtn.layer.borderWidth = 3.0f;
     self.profileImageBtn.layer.borderColor = [UIColor whiteColor].CGColor;
     
+    [self.editProfileBtn setTitle: NSLocalizedString(@"Edit Profile", nil) forState:UIControlStateNormal];
+
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"login"]) {
+        _settingsArray = [[NSArray alloc] initWithObjects:NSLocalizedString(@"Log out", nil), NSLocalizedString(@"Settings", nil), nil];
+        
+        _profileArray[1] = _settingsArray;
+        NSLog(@"check,%@",_profileArray);
+        [_profileTableView reloadData];
+        _userNameLabel.text = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"login"]];
+        NSLog(@"_userNameLabel.text: %@",_userNameLabel.text);
+        
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"profilePhoto"])
+        {
+            [self.profileImageBtn setImage:[UIImage imageWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"profilePhoto"]] forState:normal];
+        }
+        else
+        {
+            NSDictionary *parameters = @{@"username":[[NSUserDefaults standardUserDefaults] objectForKey:@"login"]};
+            NSData *data = [NSData new];
+            [comm doPostJobWithURLString:PROFILE_IMAGE_URL
+                              parameters:parameters
+                                    data:data
+                              completion:^(NSError *error, id result) {
+                                  selectProfileImage = result;
+                                  
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      
+                                      //抓取圖片
+                                      NSString *urlString = [PHOTO_URL stringByAppendingPathComponent:selectProfileImage[0][@"image"]];
+                                      NSURL *url = [NSURL URLWithString:urlString];
+                                      [self.profileImageBtn loadImageWithURL:url];
+                                      
+                                      [self.profileView reloadInputViews];
+                                  });
+                                  
+                              }];
+        }
+        
+    }else {
+            [_profileImageBtn setImage:nil forState:normal];
+            _userNameLabel.text = @"";
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"profilePhoto"];
+            _settingsArray = [[NSArray alloc] initWithObjects:NSLocalizedString(@"Log in", nil), NSLocalizedString(@"Settings", nil), nil];
+            _profileArray[1] = _settingsArray;
+            [_profileTableView reloadData];
+    }
 }
 
 // Set Section title color
@@ -79,14 +171,14 @@
 }
 
 -(void)whichOneIsSelected:(NSString*)btnName {
-    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Upload photo from" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction * camera = [UIAlertAction actionWithTitle:@"Camera" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Upload photo from", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *camera = [UIAlertAction actionWithTitle:NSLocalizedString(@"Camera", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self launchImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera whichBtn:btnName];
     }];
-    UIAlertAction * album = [UIAlertAction actionWithTitle:@"Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *album = [UIAlertAction actionWithTitle:NSLocalizedString(@"Library", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self launchImagePickerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary whichBtn:btnName];
     }];
-    UIAlertAction * cancel = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil];
     
     [alert addAction:camera];
     [alert addAction:album];
@@ -111,7 +203,6 @@
     picker.delegate = self;
     picker.allowsEditing = YES;
     [self presentViewController:picker animated:true completion:nil];
-    
 }
 
 
@@ -133,6 +224,19 @@
         
         if ([_selectedBtnName isEqualToString:@"profilePhotoBtn"]) {
             [self.profileImageBtn setImage:self.modifiedImage forState:normal];
+            
+            /*存profile至database start 2017.05.30*/
+            
+            [[NSUserDefaults standardUserDefaults] setObject:UIImageJPEGRepresentation(self.modifiedImage, 0.8) forKey:@"profilePhoto"];
+            
+            NSData *imageData = UIImageJPEGRepresentation(self.modifiedImage, 0.8);
+            
+            NSDictionary *parameters = @{@"username": [[NSUserDefaults standardUserDefaults] objectForKey:@"login"]};
+            
+            [comm updateImages:parameters :imageData];
+            
+            /*存profile至database end 2017.05.30*/
+            
         } else if ([_selectedBtnName isEqualToString:@"createADealBtn"]) {
             CreateADealTableViewController * createADeal = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateADealTableViewController"];
             
@@ -140,17 +244,12 @@
             createADeal.deal.coverPhoto = _modifiedImage;
             
             [self.navigationController pushViewController:createADeal animated:YES];
-            
-            
         }
-        
         NSLog(@"Original JPG Size: %ld, Modified JPG Size: %ld",(unsigned long)originalJPGData.length,modifiedJPGData.length);
         
         [picker dismissViewControllerAnimated:YES completion:nil];
     }
 }
-
-
 
 // Compress images
 -(UIImage *) modifyImage:(UIImage *) inputImage {
@@ -199,9 +298,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-   cell.textLabel.text = [[_profileArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-   // cell.accessoryType = UITableViewCellAccessoryNone;
     
+    cell.textLabel.text = [[_profileArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    NSLog(@"cell.textLabel.text: %@", cell.textLabel.text);
     return cell;
 }
 
@@ -225,31 +324,92 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     switch (indexPath.section) {
         case 0:
             if (indexPath.row == 0) {
-                [self whichOneIsSelected:@"createADealBtn"];
+                if ([[NSUserDefaults standardUserDefaults] objectForKey:@"login"] == nil) {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Please log in", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *OK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
+                    [alert addAction:OK];
+                    [self presentViewController:alert animated:true completion:nil];
+                } else {
+                    [self whichOneIsSelected:@"createADealBtn"];
+                }
+            } else {
+                if ([[NSUserDefaults standardUserDefaults] objectForKey:@"login"] == nil) {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"Please log in", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *OK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
+                    [alert addAction:OK];
+                    [self presentViewController:alert animated:true completion:nil];
+                } else {
+                    DealsManagementTableViewController *managementvc = [self.storyboard instantiateViewControllerWithIdentifier:@"DealsManagementTableViewController"];
+                    [self showViewController:managementvc sender:nil];
+                }
             }
             break;
         case 1:
             if (indexPath.row == 0) {
-                LoginViewController * login = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-                [self showViewController:login sender:nil];
-                //[self presentViewController:login animated:true completion:nil];
+                NSLog(@"cell.textlabel.text : %@",cell.textLabel.text);
+                if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Log out", nil)]) {
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"login"];
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"profilePhoto"];
+                    [self viewDidAppear:NO];
+                } else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Log in", nil)]) {
+                    LoginViewController *login = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                    [self showViewController:login sender:nil];
+                }
             }
             break;
         default:
             break;
     }
-    
-    NSLog(@"%ld",(long)indexPath.section);
-    NSLog(@"%ld",(long)indexPath.row);
 }
 
+
+/*
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    switch (indexPath.section) {
+        case 0:
+            if (indexPath.row == 0) {
+                [self whichOneIsSelected:@"createADealBtn"];
+            } else {
+                DealsManagementTableViewController *managementvc = [self.storyboard instantiateViewControllerWithIdentifier:@"DealsManagementTableViewController"];
+                [self showViewController:managementvc sender:nil];
+            }
+            break;
+        case 1:
+            if (indexPath.row == 0) {
+                
+                NSLog(@"cell.textlabel.text : %@",cell.textLabel.text);
+                if ([cell.textLabel.text isEqualToString:@"Log out"]) {
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"login"];
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"profilePhoto"];
+                    [self viewDidAppear:NO];
+                } else if ([cell.textLabel.text isEqualToString:@"Log in"]) {
+                    LoginViewController * login = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                    [self showViewController:login sender:nil];
+                }
+            }
+            break;
+        default:
+            break;
+    }
+}
+*/
 - (IBAction)editProfileBtnPressed:(UIButton *)sender {
+    
     AccountViewController *accountVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AccountViewController"];
-    // TODO accountVC.username = ...
+    
+    accountVC.user.username = [[NSUserDefaults standardUserDefaults] objectForKey:@"login"];
+    
+    accountVC.selectProfile = selectProfileImage;
+    
     [self showViewController:accountVC sender:nil];
 }
 
@@ -296,5 +456,12 @@
     // Pass the selected object to the new view controller.
 }
 */
+// SignUpViewController dismiss than ProfileViewController show up
+- (IBAction)dofirst:(UIStoryboardSegue*)sender {
+    
+}
 
+- (IBAction)goToProfile:(UIStoryboardSegue*)sender {
+    
+}
 @end

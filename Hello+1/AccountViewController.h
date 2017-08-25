@@ -8,10 +8,13 @@
 
 #import "XLForm.h"
 #import "XLFormViewController.h"
+#import "UserStore.h"
+#import "User.h"
 
-@interface AccountViewController : XLFormViewController 
+@interface AccountViewController : XLFormViewController
+@property (nonatomic) User *user;
+@property (nonatomic) UserStore *userStore;
+@property (nonatomic) NSMutableArray *selectProfile;
 
-    @property (nonatomic) NSString *username;
-    
-    
+
 @end

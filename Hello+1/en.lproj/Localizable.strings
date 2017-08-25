@@ -1,0 +1,58 @@
+/* 
+  Localizable.strings
+  Hello+1
+
+  Created by Sandra Wei on 2017/8/24.
+  Copyright © 2017年 Appbear. All rights reserved.
+*/
+
+// Profile Page
+"Profile" = "Profile";
+"Edit Profile" = "Edit Profile";
+"Host" = "HOST";
+"Create a deal" = "Create a deal";
+
+/* Create a deal alert */
+/* logged in*/
+"Upload photo from" = "Upload photo from";
+"Camera" = "Camera";
+"Library" = "Library";
+"Cancel" = "Cancel";
+/* log out*/
+"Please log in" = "Please log in";
+"OK" = "OK";
+/* Create a deal alert */
+
+"Deals management" = "Deals management";
+"SETTINGS" = "SETTINGS";
+"Log in" = "Log in";
+"Log out" = "Log out";
+"Settings" = "Settings";
+"About us" = "ABOUT US";
+"Give us feedback" = "Give us feedback";
+
+// Inbox page
+"Inbox" = "Inbox";
+
+// Joined page
+"Joined" = "Joined";
+"NT" = "NT";
+"dollars" = "dollars";
+"Total quantity" = "Total quantity";
+"Ongoing" = "Ongoing";
+"Min" = "Min";
+"Paid" = "Paid";
+"Shipping" = "Shipping";
+"Arrived" = "Arrived";
+
+// Saved page
+"Saved" = "Saved";
+"NT" = "NT";
+"dollars" = "dollars";
+
+// Explore page
+"Explore" = "Explore";
+"NT" = "NT";
+"dollars" = "dollars";
+"Total quantity" = "Total quantity";
+

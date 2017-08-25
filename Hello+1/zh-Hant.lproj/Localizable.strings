@@ -1,0 +1,57 @@
+/* 
+  Localizable.strings
+  Hello+1
+
+  Created by Sandra Wei on 2017/8/24.
+  Copyright © 2017年 Appbear. All rights reserved.
+*/
+
+// Profile page
+"Profile" = "我的";
+"Edit Profile" = "編輯個人檔案";
+"Host" = "我是主購";
+"Create a deal" = "我要賣東西";
+
+/* Create a deal alert */
+/* logged in */
+"Upload photo from" = "上傳商品照片";
+"Camera" = "直接拍照";
+"Library" = "從相簿選取";
+"Cancel" = "取消";
+/* log out */
+"Please log in" = "請先登入";
+"OK" = "好的";
+/* Create a deal alert */
+
+"Deals management" = "管理我賣的東西";
+"SETTINGS" = "設定";
+"Log in" = "登入";
+"Log out" = "登出";
+"Settings" = "+1App的設定";
+"About us" = "關於我們";
+"Give us feedback" = "意見回饋";
+
+// Inbox page
+"Inbox" = "聊聊";
+
+// Joined page
+"Joined" = "+1";
+"NT" = "新台幣";
+"dollars" = "元";
+"Total quantity" = "目前總數量";
+"Ongoing" = "合購中";
+"Min" = "已成團";
+"Paid" = "已付款";
+"Shipping" = "已出貨";
+"Arrived" = "已取貨";
+
+// Saved page
+"Saved" = "收藏";
+"NT" = "新台幣";
+"dollars" = "元";
+
+// Explore page
+"Explore" = "逛逛";
+"NT" = "新台幣";
+"dollars" = "元";
+"Total quantity" = "目前總數量";

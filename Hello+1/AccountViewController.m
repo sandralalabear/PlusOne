@@ -10,8 +10,7 @@
 #import "UIView+XLFormAdditions.h"
 #import "NSObject+XLFormAdditions.h"
 #import "FloatLabeledTextFieldCell.h"
-#import "UserStore.h"
-#import "User.h"
+
 
 
 #pragma mark - NSValueTransformer
@@ -63,10 +62,7 @@ NSString *userObjectKey = @"user";
 
 @interface AccountViewController ()
     
-    @property (nonatomic) User *user;
-    @property (nonatomic) UserStore *userStore;
-    
-    @end
+@end
 
 
 
@@ -79,20 +75,25 @@ NSString *userObjectKey = @"user";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(savePressed:)];
 }
     
--(void)savePressed:(UIBarButtonItem *)button
-    {
-        NSDictionary *formValues = [self formValues];
-        _user.username = formValues[Username];
-        _user.password = formValues[Password];
-        _user.name = formValues[Name];
-        _user.email = formValues[Email];
-        _user.address = formValues[Address];
-        _user.birthday = formValues[Birthday];
-        _user.paymentMethod = formValues[PaymentMethod];
-        _user.shippingMethod = formValues[ShippingMethod];
-        
-        [_userStore save:_user];
-    }
+-(void)savePressed:(UIBarButtonItem *)button {
+    
+    NSDictionary *formValues = [self formValues];
+    
+    _user.password = formValues[Password];
+    
+    _user.name = formValues[Name];
+    NSLog(@"_user.name: %@",_user.name);
+    _user.email = formValues[Email];
+    NSLog(@"_user.email: %@", _user.email);
+    _user.address = formValues[Address];
+    _user.birthday = formValues[Birthday];
+    _user.paymentMethod = formValues[PaymentMethod];
+    _user.shippingMethod = formValues[ShippingMethod];
+    
+    [_userStore save:_user];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
     
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -120,7 +121,12 @@ NSString *userObjectKey = @"user";
     
     // TODO find a better place, any method called before this method, to load the data
     _userStore = [UserStore new];
-    _user = [_userStore getByUsername:_username];
+    
+     NSString *username = [NSString stringWithFormat: @"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"login"]];
+    NSLog(@"initalizeForm username: %@", username);
+    
+    _user = [_userStore getByUsername:username];
+
     
     // Implementation details covered in the next section.
     // Initial form-section-row
@@ -136,7 +142,8 @@ NSString *userObjectKey = @"user";
     // Username (load data from database and unchangeable)
     row = [XLFormRowDescriptor formRowDescriptorWithTag:Username rowType:XLFormRowDescriptorTypeText title:@"Username"];
     row.required = YES;
-    row.value = _user.username;
+    row.value = username;
+    NSLog(@"_user,username: %@", _user.username);
     [section addFormRow:row];
     // Password
     row = [XLFormRowDescriptor formRowDescriptorWithTag:Password rowType:XLFormRowDescriptorTypePassword title:@"Password"];

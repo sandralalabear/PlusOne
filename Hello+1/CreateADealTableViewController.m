@@ -7,6 +7,7 @@
 //
 
 #import "CreateADealTableViewController.h"
+#import "ProfileTableViewController.h"
 
 static NSString *CoverPhotoCellIdentifier = @"CoverPhotoCell";
 static NSString *DealNameAndDescriptionTableViewCellIdentifier = @"DealNameAndDescriptionTableViewCell";
@@ -75,9 +76,21 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     _dealStore = [[DealStore alloc] init];
 }
 - (void)savePressed {
-    [_dealStore save:_deal];
-}
     
+    [_dealStore save:_deal];
+    
+    [NSThread sleepForTimeInterval:2];
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"發起成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (void) viewDidAppear: (BOOL)animated {
     [super viewWillAppear:animated];
     [self updateSliderLabels];
@@ -120,13 +133,13 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
 }
     
 #pragma mark - Save deal name
-    
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     _deal.dealNameText = textField.text;
     [self.view endEditing:YES];
     return YES;
 }
-    
+
 #pragma mark - Save deal description text
     
 - (void)dealDescriptionTextViewDoneButtonClicked {
@@ -424,30 +437,41 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     return cellToReturn;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.section) {
+        case 0:
+            return 110;
+            break;
+        case 1:
+            if (indexPath.row == 0) {
+                return 50;
+            } else {
+                return 100;
+            }
+            break;
+        case 2:
+            if (indexPath.row == 0) {
+                return 50;
+            } else {
+                return 120;
+            }
+            break;
+        case 3:
+            return 65;
+            break;
+        case 4:
+            return 60;
+            break;
+        case 5:
+            return 60;
+            break;
+        default:
+            break;
+    }
+    return  80;
+}
 
-    
-//    // Delete
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    // If row is deleted, remove it from the list.
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        
-//        [priceAndQuantityList removeObjectAtIndex:indexPath.row];
-//        // 存回至 NSUserDefault
-//        [[NSUserDefaults standardUserDefaults] setObject:priceAndQuantityList forKey:@"priceAndQuantityList"];
-//        // 同步資料
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-//        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-//    }
-//
-//}
 
-
-//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    
-//}
-    
     // Set section title with titleArray
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
@@ -545,17 +569,6 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
         NSData * originalJPGData = UIImageJPEGRepresentation(originalImage, 0.7);
         NSData * modifiedJPGData = UIImageJPEGRepresentation(self.modifiedImage, 0.7);
         
-        //        // 這裡要接收user 新增的照片用collectionview顯示出來
-        
-        
-        //        if ([_selectedBtnName isEqualToString:@"profilePhotoBtn"]) {
-        //            [self.profileImageBtn setImage:self.modifiedImage forState:normal];
-        //        } else if ([_selectedBtnName isEqualToString:@"createADealBtn"]) {
-        //            CreateADealTableViewController * createADeal = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateADealTableViewController"];
-        //            createADeal.coverPhoto =_modifiedImage;
-        //            [self.navigationController pushViewController:createADeal animated:YES];
-        //        }
-        //
         NSLog(@"Original JPG Size: %ld, Modified JPG Size: %ld",(unsigned long)originalJPGData.length,modifiedJPGData.length);
         
         [picker dismissViewControllerAnimated:YES completion:nil];
@@ -599,41 +612,4 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
-    
-    
-    /*
-     // Override to support conditional editing of the table view.
-     - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-     // Return NO if you do not want the specified item to be editable.
-     return YES;
-     }
-     */
-    
-    
-    
-    
-    /*
-     // Override to support rearranging the table view.
-     - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-     // Return NO if you do not want the item to be re-orderable.
-     return YES;
-     }
-     */
-    
-    /*
-     #pragma mark - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-     // Get the new view controller using [segue destinationViewController].
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
     @end

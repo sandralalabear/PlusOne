@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface ProfileTableViewController : UIViewController <UIImagePickerControllerDelegate>
-
+{
+    NSMutableArray *selectProfileImage;
+}
+@property (nonatomic,strong) UIImage * modifiedImage;
 @end

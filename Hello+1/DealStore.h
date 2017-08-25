@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "Deal.h"
+#import "UserStore.h"
+#import "PriceAndQuantityData.h"
+#import "Joined.h"
 
 @interface DealStore : NSObject
 
 - (Deal *)save:(Deal *)deal;
-    
+- (NSMutableArray *)findDealByUsername:(NSString *)username :(NSMutableArray *)selectALLDetail;
+
 @end

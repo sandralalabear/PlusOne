@@ -152,10 +152,11 @@ static NSString *ShippingMethodsTableViewCellIdentifier = @"ShippingMethodsTable
 #pragma mark - Save ending date
     
 - (void)dismissPicker {
-    _deal.endingDate = _datePicker.date;
+    
+    _deal.endingDate = [_endingDateFormatter stringFromDate:_datePicker.date];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:2];
     DatePickerTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    cell.endingDateTextField.text = [_endingDateFormatter stringFromDate:_deal.endingDate];
+    cell.endingDateTextField.text = _deal.endingDate;
     [self.view endEditing:YES];
 }
 
